@@ -61,12 +61,14 @@
         SelectedItem="{Binding SelectedCoffee, Mode=TwoWay}"
         Style="{StaticResource CoffeeListView}"
         ItemTemplate="{StaticResource CoffeeSelector}">
-        <ListView.Behaviors>
+
+       <!-- TODO EventToCommandBehavior *************************** -->
+      <ListView.Behaviors>
             <xct:EventToCommandBehavior
                 Command="{Binding SelectedCommand}"
                 EventArgsConverter="{StaticResource ItemSelectedEventArgsConverter}"
                 EventName="ItemSelected" />
-        </ListView.Behaviors>
+      </ListView.Behaviors>
         <ListView.GroupHeaderTemplate>
             <DataTemplate x:DataType="{x:Null}">
                 <ViewCell>

@@ -4,6 +4,8 @@ using MyCoffeeApp.Shared.Models;
 using MyCoffeeApp.Views;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Command = MvvmHelpers.Commands.Command;
 
@@ -36,6 +38,7 @@ namespace MyCoffeeApp.ViewModels
             
             RefreshCommand = new AsyncCommand(Refresh);
             FavoriteCommand = new AsyncCommand<Coffee>(Favorite);
+            // If using EventToCommandBehavior, use "object" instead of coffee b/c (see eventhandler)
             SelectedCommand = new AsyncCommand<object>(Selected);
             LoadMoreCommand = new Command(LoadMore);
             ClearCommand = new Command(Clear);
@@ -53,11 +56,41 @@ namespace MyCoffeeApp.ViewModels
 
         Coffee previouslySelected;
         Coffee selectedCoffee;
+        // Be aware this is a setter so tricky to do async stuff in here? 
+        // 
         public Coffee SelectedCoffee
         {
+            
             get => selectedCoffee;
             set => SetProperty(ref selectedCoffee, value);
+        
+        #region Before creating Command Event (better to do async in events)
+            //set
+            //{
+            //    if (value != null)
+            //    {
+
+            //        // Using EventToCommandBehavior, moved to an Event
+            //        Application.Current.MainPage.DisplayAlert("Selected", value.Name, "Ok");
+            //        // Before nulling, could set the previouslySelected coffee value, easy b/c just a value;
+            //        // But if passing an object into something, you may want to store that object first, just so there's no references that being wiped out when you set it to null of that value
+            //        value = null;
+            //    }
+
+            //    selectedCoffee = value;
+            //    OnPropertyChanged();
+            //} 
+            #endregion
         }
+
+        #region EventToCommandBehavior Notes
+        //// If using EventToCommandBehavior, use "object" arg instead of coffee b/c
+        //// the coffee == null will call an exception from how EventToCommandBehavior works
+        ////  now that it is an object, will cast it as coffee locally
+        ///  Coffee will be null but casts the object to show up as coffee
+        ////   Deselect it before the pop-up
+        ////   Works b/c we still have our selected item with a two way data binding. 
+        #endregion
 
         async Task Selected(object args)
         {

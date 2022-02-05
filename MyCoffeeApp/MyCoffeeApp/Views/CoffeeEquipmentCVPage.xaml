@@ -41,6 +41,7 @@
                         <Label Style="{StaticResource LabelMedium}" Text="{Binding Key}" />
                     </StackLayout>
                 </DataTemplate>
+
             </CollectionView.GroupHeaderTemplate>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
